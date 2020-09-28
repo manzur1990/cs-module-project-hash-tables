@@ -19,10 +19,9 @@ class HashTable:
 
     Implement this.
     """
-
     def __init__(self, capacity):
         # Your code here
-
+        self.capacity = capacity
 
     def get_num_slots(self):
         """
@@ -36,7 +35,6 @@ class HashTable:
         """
         # Your code here
 
-
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
@@ -44,7 +42,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
     def fnv1(self, key):
         """
@@ -55,7 +52,6 @@ class HashTable:
 
         # Your code here
 
-
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
@@ -63,7 +59,6 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
-
 
     def hash_index(self, key):
         """
@@ -83,7 +78,6 @@ class HashTable:
         """
         # Your code here
 
-
     def delete(self, key):
         """
         Remove the value stored with the given key.
@@ -93,7 +87,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
     def get(self, key):
         """
@@ -105,7 +98,6 @@ class HashTable:
         """
         # Your code here
 
-
     def resize(self, new_capacity):
         """
         Changes the capacity of the hash table and
@@ -114,7 +106,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
 
 if __name__ == "__main__":
