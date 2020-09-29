@@ -21,9 +21,16 @@ class HashTable:
     """
     def __init__(self, capacity):
         # Your code here
-        self.capacity = capacity
-        self.hash_table = [None] * capacity
-        self.index_count = 0
+        # self.capacity = capacity
+        # self.hash_table = [None] * capacity
+        # self.index_count = 0
+        if capacity < MIN_CAPACITY:
+            capacity = MIN_CAPACITY
+            return
+        else:
+            self.capacity = capacity
+            self.hash_table = [None] * capacity
+            self.index_count = 0
 
     def get_num_slots(self):
         """
@@ -62,7 +69,10 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        hash = 5381
+        for x in key:
+            hash = ((hash << 5) + hash) + ord(x)
+        return hash
 
     def hash_index(self, key):
         """
@@ -81,6 +91,18 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        entry = HashTableEntry(key, value)
+
+        # initial case with empty hash table
+        if self.hash_table is None:
+            self.hash_table[index] = entry
+            self.index_count += 1
+            return
+        # create node variable and traverse the table
+        node = self.hash_table[index]
+        self.hash_table[index].next = node
+        self.index_count += 1
 
     def delete(self, key):
         """
@@ -101,6 +123,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        entry = self.hash_table[index]
+
+        while entry:
+            if entry.key == key:
+                return entry.value
+            entry = entry.next
+        return entry
 
     def resize(self, new_capacity):
         """
@@ -110,6 +140,16 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        prev_hash_table = self.hash_table
+        self.capacity = new_capacity
+        self.hash_table = [None] * new_capacity
+        self.count = 0
+
+        for entry in prev_hash_table:
+            curr = entry
+            while curr:
+                self.put(curr.key, curr.value)
+                curr = curr.next
 
 
 if __name__ == "__main__":
