@@ -16,14 +16,10 @@ class HashTable:
     """
     A hash table that with `capacity` buckets
     that accepts string keys
-
     Implement this.
     """
     def __init__(self, capacity):
         # Your code here
-        # self.capacity = capacity
-        # self.hash_table = [None] * capacity
-        # self.index_count = 0
         if capacity < MIN_CAPACITY:
             capacity = MIN_CAPACITY
             return
@@ -37,9 +33,7 @@ class HashTable:
         Return the length of the list you're using to hold the hash
         table data. (Not the number of items stored in the hash table,
         but the number of slots in the main list.)
-
         One of the tests relies on this.
-
         Implement this.
         """
         # Your code here
@@ -48,16 +42,15 @@ class HashTable:
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
-
         Implement this.
         """
         # Your code here
+        # total number of items / table size
         return self.index_count / self.capacity
 
     def fnv1(self, key):
         """
         FNV-1 Hash, 64-bit
-
         Implement this, and/or DJB2.
         """
 
@@ -66,9 +59,9 @@ class HashTable:
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
-
         Implement this, and/or FNV-1.
         """
+        # Your code here
         hash = 5381
         for x in key:
             hash = ((hash << 5) + hash) + ord(x)
@@ -85,9 +78,7 @@ class HashTable:
     def put(self, key, value):
         """
         Store the value with the given key.
-
         Hash collisions should be handled with Linked List Chaining.
-
         Implement this.
         """
         # Your code here
@@ -101,25 +92,45 @@ class HashTable:
             return
         # create node variable and traverse the table
         node = self.hash_table[index]
+        # questions: how the order of the veraibles is interpreted in the compiler?
+        self.hash_table[index] = entry
         self.hash_table[index].next = node
         self.index_count += 1
 
     def delete(self, key):
         """
         Remove the value stored with the given key.
-
         Print a warning if the key is not found.
-
         Implement this.
         """
         # Your code here
 
+        index = self.hash_index(key)
+        entry = self.hash_table[index]
+        prev_entry = None
+
+        if entry is not None:
+            while entry.next != None and entry.key != key:
+                prev_entry = entry
+                entry = entry.next
+            if entry.key == key:
+                if prev_entry is None:
+                    self.hash_table[index] = entry.next
+                else:
+                    prev_entry.next = entry.next
+                    self.index_count -= 1
+                return
+
+            if self.get_load_factor() < .2:
+                if self.capacity // 2 > MIN_CAPACITY:
+                    self.resize(self.capacity // 2)
+                elif self.capacity > MIN_CAPACITY:
+                    self.resize(MIN_CAPACITY)
+
     def get(self, key):
         """
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
         Implement this.
         """
         # Your code here
@@ -136,16 +147,16 @@ class HashTable:
         """
         Changes the capacity of the hash table and
         rehashes all key/value pairs.
-
         Implement this.
         """
         # Your code here
-        prev_hash_table = self.hash_table
+
+        temp_hash_table = self.hash_table
         self.capacity = new_capacity
         self.hash_table = [None] * new_capacity
-        self.count = 0
+        self.index_count = 0
 
-        for entry in prev_hash_table:
+        for entry in temp_hash_table:
             curr = entry
             while curr:
                 self.put(curr.key, curr.value)
@@ -167,7 +178,6 @@ if __name__ == "__main__":
     ht.put("line_10", "Long time the manxome foe he sought--")
     ht.put("line_11", "So rested he by the Tumtum tree")
     ht.put("line_12", "And stood awhile in thought.")
-
     print("")
 
     # Test storing beyond capacity
